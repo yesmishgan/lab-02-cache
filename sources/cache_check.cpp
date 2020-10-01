@@ -6,12 +6,12 @@
 #include <algorithm>
 #include <random>
 
-cache_check::cache_check(std::string travel_variant)
-    :travel_variant(travel_variant) {
+cache_check::cache_check(std::string travel_variant_)
+    :travel_variant(travel_variant_) {
   for (int size = 1.0/2 * L1; size <= 3.0 / 2 * L3; size *= 2){
     size_buf.push_back(size);
   }
-  for (auto i : size_buf) {
+  for (int i : size_buf) {
     int* arr = new int[i / 4.0 / KYLO];
     int k = 0;
     if (travel_variant == "direction") {//Direction method
