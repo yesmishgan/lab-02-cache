@@ -12,7 +12,7 @@ cache_check::cache_check(std::string travel_variant_)
     size_buf.push_back(size);
   }
   for (int i : size_buf) {
-    int* arr = new int[i / 4.0 / KYLO];
+    int* arr = new int[static_cast<int>(i / 4.0 / KYLO)];
     int k = 0;
     if (travel_variant == "direction") {//Direction method
       for (size_t j = 0; j < i / 4.0 / KYLO; j += 16){
