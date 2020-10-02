@@ -70,7 +70,7 @@ size_t cache_check::getCountBuf() const { return size_buf.size(); }
 
 void cache_check::countDirect() {
   travel_variant = "direction";
-  for (int i : size_buf) {
+  for (const int& i : size_buf) {
     int* arr = new int[static_cast<int>(i / 4.0 / kylo)];
     int k = 0;
       for (size_t j = 0; j < i / 4.0 / kylo; j += sixteen) {
@@ -86,19 +86,20 @@ void cache_check::countDirect() {
       result_of_experiments.push_back(
           static_cast<double>(end_time - start_time) / CLOCKS_PER_SEC *
           ten_hundred);
+      delete []arr;
   }
 }
 
 void cache_check::countReverse() {
   travel_variant = "reverse";
-  for (int i : size_buf) {
+  for (const int& i : size_buf) {
     int* arr = new int[static_cast<int>(i / 4.0 / kylo)];
     int k = 0;
     for (size_t j = i / 4.0 / kylo; j > 0 ; j -= sixteen){
       k = arr[j];
     }
     int start_time = clock();
-    for (size_t num = 0; num < 1000; ++num){
+    for (size_t num = 0; num < ten_hundred; ++num){
       for (size_t j = i / 4.0 / kylo; j > 0; j -= sixteen){
         k = arr[j];
       }
@@ -106,12 +107,13 @@ void cache_check::countReverse() {
     int end_time = clock();
     result_of_experiments.push_back(static_cast<double>(end_time - start_time)
                                     / CLOCKS_PER_SEC * ten_hundred);
+    delete []arr;
   }
 }
 
 void cache_check::countRandom() {
   travel_variant = "random";
-  for (int i : size_buf) {
+  for (const int& i : size_buf) {
     int* arr = new int[static_cast<int>(i / 4.0 / kylo)];
     int k = 0;
     std::vector<int> index_of_blocks;
@@ -131,17 +133,18 @@ void cache_check::countRandom() {
     int end_time = clock();
     result_of_experiments.push_back(static_cast<double>(end_time - start_time)
                                     / CLOCKS_PER_SEC * ten_hundred);
+    delete []arr;
   }
 }
 
 std::stringstream cache_check::getExperiment(size_t num_exp) const{
   std::stringstream out;
-  out << "\t- experiment:\n";
-  out << "\t\tnumber: " << num_exp + 1 << "\n";
-  out << "\t\tinput_data:\n";
-  out << "\t\t\tbuffer_size: " << size_buf[num_exp] / kylo << "Kb" <<"\n";
-  out << "\t\tresults:\n";
-  out << "\t\t\tduration: " << result_of_experiments[num_exp] << "ms" << '\n';
+  out << "\t- experiment:\n"
+      << "\t\tnumber: " << num_exp + 1 << "\n"
+      << "\t\tinput_data:\n"
+      << "\t\t\tbuffer_size: " << size_buf[num_exp] / kylo << "Kb" <<"\n"
+      << "\t\tresults:\n"
+      << "\t\t\tduration: " << result_of_experiments[num_exp] << "ms" << '\n';
   return out;
 }
 
@@ -151,9 +154,9 @@ std::string cache_check::getTravel() const {
 
 std::ostream & operator << (std::ostream & out, const cache_check & a){
   out << "investigation:\n" << "\ttravel_order: " << a.getTravel() << "\n";
-  for (size_t i = 0; i < a.getCountBuf(); ++i){
+  for (size_t i = 0; i < a.getCountBuf(); ++i)
     out << a.getExperiment(i).str();
-  }
+
   out << "\n";
   return out;
 }
