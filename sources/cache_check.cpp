@@ -10,7 +10,8 @@ const int ten_hundred = 1000;
 const int sixteen = 16;
 
 cache_check::cache_check(){
-  for (int size = 1.0/2 * cache_size[0]; size <= 3.0 / 2 * cache_size[2]; size *= 2){
+  for (int size = 1.0/2 * cache_size[0];
+       size <= 3.0/2 * cache_size[2]; size *= 2){
     size_buf.push_back(size);
   }
   /*
@@ -72,7 +73,6 @@ void cache_check::countDirect() {
   travel_variant = "direction";
   for (const int& i : size_buf) {
     int* arr = new int[static_cast<int>(i / 4.0 / kylo)];
-    int k = 0;
       for (size_t j = 0; j < i / 4.0 / kylo; j += sixteen) {
         k = arr[j];
       }
@@ -94,7 +94,6 @@ void cache_check::countReverse() {
   travel_variant = "reverse";
   for (const int& i : size_buf) {
     int* arr = new int[static_cast<int>(i / 4.0 / kylo)];
-    int k = 0;
     for (size_t j = i / 4.0 / kylo; j > 0 ; j -= sixteen){
       k = arr[j];
     }
@@ -115,7 +114,6 @@ void cache_check::countRandom() {
   travel_variant = "random";
   for (const int& i : size_buf) {
     int* arr = new int[static_cast<int>(i / 4.0 / kylo)];
-    int k = 0;
     std::vector<int> index_of_blocks;
     for (size_t j = 0; j < i / 4.0 / kylo; j += sixteen){
       index_of_blocks.push_back(j);

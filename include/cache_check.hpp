@@ -23,7 +23,10 @@ class cache_check {
   void countRandom();
   friend std::ostream & operator << (std::ostream & out, const cache_check & a);
  private:
-  const std::vector<int> cache_size = {256 * kylo, 1024 * kylo, 6 * 1024 * kylo};
+  const std::vector<int> cache_size = {256 * kylo,
+                                       1024 * kylo,
+                                       6 * 1024 * kylo};
+  int k;
   std::string travel_variant;
   std::vector<int> size_buf;
   std::vector<double> result_of_experiments;
