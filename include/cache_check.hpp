@@ -10,23 +10,20 @@
 #include <ctime>
 #include <vector>
 
-const int KYLO = 1024;
-
-const int L2 = 1024 * KYLO;
+const int kylo = 1024;
 
 class cache_check {
  public:
   explicit cache_check(std::string travel_variant);
-  std::stringstream getExperiment(size_t num_exp);
+  std::stringstream getExperiment(size_t num_exp) const;
   std::string getTravel() const;
-  int getCountBuf() const;
-  friend std::ostream & operator << (std::ostream & out, cache_check & a);
+  size_t getCountBuf() const;
+  friend std::ostream & operator << (std::ostream & out, const cache_check & a);
  private:
+  const std::vector<int> cache_size = {256 * kylo, 1024 * kylo, 6 * 1024 * kylo};
   std::string travel_variant;
   std::vector<int> size_buf;
   std::vector<double> result_of_experiments;
-  const int L1 = 256 * KYLO;
-  const int L3 = 6 * 1024 * KYLO;
 };
 
 
