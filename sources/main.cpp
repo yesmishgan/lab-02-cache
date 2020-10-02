@@ -4,11 +4,12 @@
 #include "cache_check.hpp"
 
 int main(){
-  cache_check a("direction");
-  cache_check b("reverse");
-  cache_check c("random");
+  cache_check a;
+  a.countDirect();
   std::cout << a;
-  std::cout << b;
-  std::cout << c;
+  a.countReverse();
+  std::cout << a;
+  a.countRandom();
+  std::cout << a;
   return 0;
 }

@@ -9,11 +9,11 @@
 const int ten_hundred = 1000;
 const int sixteen = 16;
 
-cache_check::cache_check(std::string travel_variant_)
-    :travel_variant(travel_variant_) {
+cache_check::cache_check(){
   for (int size = 1.0/2 * cache_size[0]; size <= 3.0 / 2 * cache_size[2]; size *= 2){
     size_buf.push_back(size);
   }
+  /*
   for (int i : size_buf) {
     int* arr = new int[static_cast<int>(i / 4.0 / kylo)];
     int k = 0;
@@ -63,9 +63,76 @@ cache_check::cache_check(std::string travel_variant_)
                                       / CLOCKS_PER_SEC * ten_hundred);
     }
   }
+   */
 }
 
 size_t cache_check::getCountBuf() const { return size_buf.size(); }
+
+void cache_check::countDirect() {
+  travel_variant = "direction";
+  for (int i : size_buf) {
+    int* arr = new int[static_cast<int>(i / 4.0 / kylo)];
+    int k = 0;
+      for (size_t j = 0; j < i / 4.0 / kylo; j += sixteen) {
+        k = arr[j];
+      }
+      int start_time = clock();
+      for (size_t num = 0; num < ten_hundred; ++num) {
+        for (size_t j = 0; j < i / 4.0 / kylo; j += sixteen) {
+          k = arr[j];
+        }
+      }
+      int end_time = clock();
+      result_of_experiments.push_back(
+          static_cast<double>(end_time - start_time) / CLOCKS_PER_SEC *
+          ten_hundred);
+  }
+}
+
+void cache_check::countReverse() {
+  travel_variant = "reverse";
+  for (int i : size_buf) {
+    int* arr = new int[static_cast<int>(i / 4.0 / kylo)];
+    int k = 0;
+    for (size_t j = i / 4.0 / kylo; j > 0 ; j -= sixteen){
+      k = arr[j];
+    }
+    int start_time = clock();
+    for (size_t num = 0; num < 1000; ++num){
+      for (size_t j = i / 4.0 / kylo; j > 0; j -= sixteen){
+        k = arr[j];
+      }
+    }
+    int end_time = clock();
+    result_of_experiments.push_back(static_cast<double>(end_time - start_time)
+                                    / CLOCKS_PER_SEC * ten_hundred);
+  }
+}
+
+void cache_check::countRandom() {
+  travel_variant = "random";
+  for (int i : size_buf) {
+    int* arr = new int[static_cast<int>(i / 4.0 / kylo)];
+    int k = 0;
+    std::vector<int> index_of_blocks;
+    for (size_t j = 0; j < i / 4.0 / kylo; j += sixteen){
+      index_of_blocks.push_back(j);
+      k = arr[j];
+    }
+    auto rng = std::default_random_engine {};
+    std::shuffle(index_of_blocks.begin(), index_of_blocks.end(), rng);
+
+    int start_time = clock();
+    for (size_t num = 0; num < ten_hundred; ++num){
+      for (auto index : index_of_blocks){
+        k = arr[index];
+      }
+    }
+    int end_time = clock();
+    result_of_experiments.push_back(static_cast<double>(end_time - start_time)
+                                    / CLOCKS_PER_SEC * ten_hundred);
+  }
+}
 
 std::stringstream cache_check::getExperiment(size_t num_exp) const{
   std::stringstream out;
